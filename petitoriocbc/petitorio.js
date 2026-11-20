@@ -68,17 +68,20 @@
   }
 
   // ---------------------------------------------------------------- contador (solo el número)
+  // Se prende con mostrarContador: true en config.js.
 
+  const CONTADOR = C.mostrarContador === true;
   function mostrarContador(n) {
-    if (!Number.isFinite(n) || n < 0) return;
+    if (!CONTADOR || !Number.isFinite(n) || n < 0) return;
     $("contador-antes").textContent = n === 1 ? "Ya firmó" : "Ya firmaron";
     $("contador-numero").textContent = n.toLocaleString("es-AR");
     $("contador-despues").textContent = n === 1 ? "estudiante" : "estudiantes";
     $("contador").hidden = n === 0;
   }
-  llamar("contador")
-    .then((r) => r?.ok && mostrarContador(Number(r.firmas)))
-    .catch(() => {});
+  if (CONTADOR)
+    llamar("contador")
+      .then((r) => r?.ok && mostrarContador(Number(r.firmas)))
+      .catch(() => {});
 
   // ---------------------------------------------------------------- validaciones (las mismas que en backend/Codigo.gs)
 
@@ -215,13 +218,13 @@
 
   formEncuesta.addEventListener("reset", () => {
     $("campo-otra").hidden = true;
-    $("mas-preguntas").hidden = false;
+    $("pregunta-termina").hidden = false;
   });
   formEncuesta.addEventListener("change", (e) => {
     if (e.target.name !== "materia") return;
     const otra = e.target.value === "Otra";
     $("campo-otra").hidden = !otra;
-    $("mas-preguntas").hidden = e.target.value === SOLO_FIRMA;
+    $("pregunta-termina").hidden = e.target.value === SOLO_FIRMA;
     if (otra) $("materia-otra").focus();
     else marcar($("materia-otra"), "materia-otra-error", "");
   });
@@ -234,7 +237,7 @@
     const telCrudo = formEncuesta.telefono.value.trim();
     const telefono = normalizarTelefono(telCrudo);
     const mail = formEncuesta.mail.value.trim();
-    const soloFirma = materia === SOLO_FIRMA; // no cursa: no hacen falta las demás preguntas
+    const soloFirma = materia === SOLO_FIRMA; // no cursa: no se le pregunta si termina el CBC
     const ok = [
       marcar(fsMateria, "materia-error", materia ? "" : "Elegí una materia o la última opción."),
       marcar($("materia-otra"), "materia-otra-error", materia === "Otra" && !materiaOtra ? "Contanos qué materia." : ""),
@@ -242,9 +245,9 @@
       marcar(
         formEncuesta.telefono,
         "telefono-error",
-        soloFirma ? "" : !telCrudo ? "Escribí tu teléfono." : !telefono ? "Revisá el número: tiene que ser un celular con código de área, por ejemplo 11 2345 6789." : "",
+        !telCrudo ? "Escribí tu teléfono." : !telefono ? "Revisá el número: tiene que ser un celular con código de área, por ejemplo 11 2345 6789." : "",
       ),
-      marcar(formEncuesta.mail, "mail-error", soloFirma ? "" : !mail ? "Escribí tu mail." : !mailValido(mail) ? "Revisá el mail: tiene que ser como nombre@ejemplo.com." : ""),
+      marcar(formEncuesta.mail, "mail-error", !mail ? "Escribí tu mail." : !mailValido(mail) ? "Revisá el mail: tiene que ser como nombre@ejemplo.com." : ""),
     ].every(Boolean);
     errorGeneral("encuesta-error", "");
     if (!ok) return enfocarPrimerError(formEncuesta);
@@ -259,8 +262,8 @@
         materia,
         materiaOtra: materia === "Otra" ? materiaOtra : "",
         terminaCBC: soloFirma ? "" : terminaCBC,
-        telefono: soloFirma ? "" : telefono,
-        mail: soloFirma ? "" : mail,
+        telefono,
+        mail,
         sitio: formEncuesta.sitio.value,
         ms: Date.now() - cargada,
       });

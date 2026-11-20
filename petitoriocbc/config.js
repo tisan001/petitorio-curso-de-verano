@@ -18,6 +18,9 @@ window.PETITORIO = {
   // URL de la Web App de Google Apps Script (termina en /exec). Ver backend/LEEME.md
   backend: "https://script.google.com/macros/s/AKfycbxpG9OgSJn0eR9i0iXdzDvNkW9BxUnFVvAJsRkpXhIVxK33h-vT5g8JOkKTbgCJ4voJXA/exec",
 
+  // "Ya firmaron N estudiantes" debajo del título. Para mostrarlo, cambiá false por true.
+  mostrarContador: false,
+
   // Texto que acompaña al link al tocar "Compartir"
   textoCompartir: "Ya tenemos curso de verano del CBC. Ahora vamos por todas las materias: firmá el petitorio",
 };

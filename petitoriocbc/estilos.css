@@ -303,10 +303,6 @@ fieldset[aria-invalid="true"] .opcion span {
   background: rgb(91 39 87 / 0.08);
   font-size: 1.15rem;
 }
-.mas-preguntas {
-  display: grid;
-  gap: 1.15rem;
-}
 
 /* "No quiero cursar nada, solo ayudar con mi firma": opción aparte, a todo el ancho */
 .opcion-ancha {

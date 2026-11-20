@@ -16,12 +16,12 @@
     <meta property="og:locale" content="es_AR" />
     <meta property="og:title" content="Curso de verano CBC: vamos por todas las materias" />
     <meta property="og:description" content="Ya tenemos curso de verano del CBC. Ahora vamos por todas las materias: firmá el petitorio." />
-    <meta property="og:url" content="https://petitorio-curso-de-verano.sanrt2001.workers.dev/" />
-    <meta property="og:image" content="https://petitorio-curso-de-verano.sanrt2001.workers.dev/assets/logos/apple-touch-icon.png" />
+    <meta property="og:url" content="https://petitorio-curso-de-verano.sanrt2001.workers.dev/petitoriocbc/" />
+    <meta property="og:image" content="https://petitorio-curso-de-verano.sanrt2001.workers.dev/petitoriocbc/assets/logos/apple-touch-icon.png" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Curso de verano CBC: vamos por todas las materias" />
     <meta name="twitter:description" content="Ya tenemos curso de verano del CBC. Ahora vamos por todas las materias: firmá el petitorio." />
-    <meta name="twitter:image" content="https://petitorio-curso-de-verano.sanrt2001.workers.dev/assets/logos/apple-touch-icon.png" />
+    <meta name="twitter:image" content="https://petitorio-curso-de-verano.sanrt2001.workers.dev/petitoriocbc/assets/logos/apple-touch-icon.png" />
 
     <link rel="preload" href="assets/fuentes/ClimateCrisis.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="estilos.css" />
@@ -91,9 +91,8 @@
             <input id="materia-otra" name="materiaOtra" type="text" maxlength="80" aria-describedby="materia-otra-error" />
             <p class="error" id="materia-otra-error" hidden></p>
           </div>
-          <!-- se ocultan si elige "No quiero cursar nada, solo ayudar con mi firma" -->
-          <div class="mas-preguntas" id="mas-preguntas">
-          <fieldset class="campo" aria-describedby="termina-error">
+          <!-- se oculta si elige "No quiero cursar nada, solo ayudar con mi firma" -->
+          <fieldset class="campo" id="pregunta-termina" aria-describedby="termina-error">
             <legend>¿Terminás el CBC si cursás la materia en el curso de verano?</legend>
             <div class="opciones">
               <label class="opcion"><input type="radio" name="terminaCBC" value="Sí" /><span>Sí</span></label>
@@ -122,7 +121,6 @@
             Usamos estos datos para relevar qué materias hacen falta en el curso de verano intensivo y para enviarte
             actualizaciones y novedades.
           </p>
-          </div>
           <p class="error error-general" id="encuesta-error" role="alert" hidden></p>
           <div class="acciones">
             <button class="boton" type="submit">Enviar</button>
