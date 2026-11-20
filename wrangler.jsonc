@@ -1,0 +1,9 @@
+// Publicación en Cloudflare Workers (archivos estáticos, sin build).
+// Cloudflare toma los archivos de esta carpeta tal cual cada vez que se sube algo a main.
+{
+  "name": "petitorio-curso-de-verano",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./"
+  }
+}

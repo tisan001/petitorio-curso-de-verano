@@ -1,0 +1,8 @@
+# no se publican
+.git
+.github
+.assetsignore
+.nojekyll
+wrangler.jsonc
+.wrangler
+.gitignore
