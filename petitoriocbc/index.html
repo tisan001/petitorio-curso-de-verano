@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- si se abrió con http:// (sin candado), pasa a https:// antes de cargar nada -->
+    <script>
+      if (location.protocol === "http:" && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) location.replace("https:" + location.href.slice(5));
+    </script>
     <title>Curso de Verano CBC 2027 · Firmá el petitorio · ReFADU</title>
     <meta name="description" content="Ya tenemos curso de verano del CBC. Ahora vamos por todas las materias: firmá el petitorio." />
     <meta name="theme-color" content="#FF6E23" />
