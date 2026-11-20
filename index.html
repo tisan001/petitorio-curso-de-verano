@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Curso de Verano CBC 2027 · Firmá el petitorio · ReFADU</title>
+    <meta name="description" content="Ya tenemos curso de verano del CBC. Ahora vamos por todas las materias: firmá el petitorio." />
+    <meta name="theme-color" content="#FF6E23" />
+    <link rel="icon" href="assets/logos/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png" />
+
+    <!-- Para compartir (WhatsApp, Instagram, X). Las redes no leen config.js: estos textos van acá.
+         La imagen tiene que ser una URL absoluta (https://...) una vez que la página esté publicada. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ReFADU" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:title" content="Curso de verano CBC: vamos por todas las materias" />
+    <meta property="og:description" content="Ya tenemos curso de verano del CBC. Ahora vamos por todas las materias: firmá el petitorio." />
+    <meta property="og:url" content="https://tisan001.github.io/petitorio-curso-de-verano/" />
+    <meta property="og:image" content="https://tisan001.github.io/petitorio-curso-de-verano/assets/logos/apple-touch-icon.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Curso de verano CBC: vamos por todas las materias" />
+    <meta name="twitter:description" content="Ya tenemos curso de verano del CBC. Ahora vamos por todas las materias: firmá el petitorio." />
+    <meta name="twitter:image" content="https://tisan001.github.io/petitorio-curso-de-verano/assets/logos/apple-touch-icon.png" />
+
+    <link rel="preload" href="assets/fuentes/ClimateCrisis.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="stylesheet" href="estilos.css" />
+  </head>
+  <body>
+    <main class="hoja">
+      <header class="encabezado">
+        <img class="logo" src="assets/logos/refadu-horizontal-color.svg" alt="ReFADU" width="200" height="27" />
+        <p class="volanta" id="volanta"></p>
+        <h1 id="titulo"></h1>
+        <p class="contador" id="contador" hidden>
+          <span id="contador-antes">Ya firmaron</span>
+          <strong id="contador-numero">0</strong>
+          <span id="contador-despues">estudiantes</span>
+        </p>
+      </header>
+
+      <div class="texto" id="parrafos"></div>
+
+      <p class="aviso-prueba" id="modo-prueba" hidden>
+        <strong>Modo de prueba:</strong> no hay backend cargado en <code>config.js</code>. Se simula todo y no se guarda nada.
+      </p>
+
+      <!-- ------------------------------------------------ paso 1: firma -->
+      <section class="paso" id="paso-firma" aria-labelledby="paso-firma-titulo">
+        <p class="paso-numero">Paso 1 de 2</p>
+        <h2 id="paso-firma-titulo" tabindex="-1">Firmá el petitorio</h2>
+        <form id="form-firma" novalidate>
+          <div class="campo">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" autocomplete="given-name" maxlength="60" required aria-describedby="nombre-error" />
+            <p class="error" id="nombre-error" hidden></p>
+          </div>
+          <div class="campo">
+            <label for="apellido">Apellido</label>
+            <input id="apellido" name="apellido" type="text" autocomplete="family-name" maxlength="60" required aria-describedby="apellido-error" />
+            <p class="error" id="apellido-error" hidden></p>
+          </div>
+          <div class="campo">
+            <label for="dni">DNI</label>
+            <input id="dni" name="dni" type="text" inputmode="numeric" autocomplete="off" maxlength="12" required aria-describedby="dni-ayuda dni-error" />
+            <p class="ayuda" id="dni-ayuda">Solo números, con o sin puntos.</p>
+            <p class="error" id="dni-error" hidden></p>
+          </div>
+          <div class="trampa" aria-hidden="true">
+            <label for="sitio-firma">No completes este campo</label>
+            <input id="sitio-firma" name="sitio" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <p class="error error-general" id="firma-error" role="alert" hidden></p>
+          <button class="boton" type="submit">Firmar</button>
+        </form>
+      </section>
+
+      <!-- ------------------------------------------------ paso 2: encuesta -->
+      <section class="paso" id="paso-encuesta" aria-labelledby="paso-encuesta-titulo" hidden>
+        <p class="paso-numero">Paso 2 de 2</p>
+        <p class="ya-firmo" id="ya-firmo" hidden>Este DNI ya firmó el petitorio. ¡Gracias!</p>
+        <h2 id="paso-encuesta-titulo" tabindex="-1">¡Gracias por firmar! Ayudanos con unas preguntas más</h2>
+        <form id="form-encuesta" novalidate>
+          <fieldset class="campo" aria-describedby="materia-error">
+            <legend>¿Qué materia necesitás cursar?</legend>
+            <div class="opciones" id="materias"></div>
+            <p class="error" id="materia-error" hidden></p>
+          </fieldset>
+          <div class="campo" id="campo-otra" hidden>
+            <label for="materia-otra">¿Cuál?</label>
+            <input id="materia-otra" name="materiaOtra" type="text" maxlength="80" aria-describedby="materia-otra-error" />
+            <p class="error" id="materia-otra-error" hidden></p>
+          </div>
+          <!-- se ocultan si elige "No quiero cursar nada, solo ayudar con mi firma" -->
+          <div class="mas-preguntas" id="mas-preguntas">
+          <fieldset class="campo" aria-describedby="termina-error">
+            <legend>¿Terminás el CBC si cursás la materia en el curso de verano?</legend>
+            <div class="opciones">
+              <label class="opcion"><input type="radio" name="terminaCBC" value="Sí" /><span>Sí</span></label>
+              <label class="opcion"><input type="radio" name="terminaCBC" value="No" /><span>No</span></label>
+              <label class="opcion"><input type="radio" name="terminaCBC" value="No sé" /><span>No sé</span></label>
+            </div>
+            <p class="error" id="termina-error" hidden></p>
+          </fieldset>
+          <div class="campo">
+            <label for="telefono">Teléfono</label>
+            <input id="telefono" name="telefono" type="tel" autocomplete="tel" maxlength="25" required aria-describedby="telefono-ayuda telefono-error" />
+            <p class="ayuda" id="telefono-ayuda">Tu celular con código de área. Por ejemplo: 11 2345 6789.</p>
+            <p class="error" id="telefono-error" hidden></p>
+          </div>
+          <div class="campo">
+            <label for="mail">Mail</label>
+            <input id="mail" name="mail" type="email" autocomplete="email" maxlength="254" required aria-describedby="mail-error" />
+            <p class="error" id="mail-error" hidden></p>
+          </div>
+          <div class="trampa" aria-hidden="true">
+            <label for="sitio-encuesta">No completes este campo</label>
+            <input id="sitio-encuesta" name="sitio" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <p class="aclaracion">
+            Usamos estos datos para relevar qué materias hacen falta en el curso de verano intensivo y para enviarte
+            actualizaciones y novedades.
+          </p>
+          </div>
+          <p class="error error-general" id="encuesta-error" role="alert" hidden></p>
+          <div class="acciones">
+            <button class="boton" type="submit">Enviar</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ------------------------------------------------ final -->
+      <section class="paso paso-final" id="paso-final" aria-labelledby="paso-final-titulo" hidden>
+        <h2 id="paso-final-titulo" tabindex="-1">¡Listo! Gracias por sumarte.</h2>
+        <div class="acciones">
+          <button class="boton" type="button" id="compartir">Compartir</button>
+        </div>
+        <p class="compartir-aviso" id="compartir-aviso" role="status"></p>
+      </section>
+    </main>
+
+    <script src="config.js"></script>
+    <script src="petitorio.js"></script>
+  </body>
+</html>

@@ -1,0 +1,396 @@
+/* Petitorio Curso de Verano · ReFADU. Colores y tipografías del manual de marca. */
+
+@font-face {
+  font-family: "Climate Crisis";
+  src: url("assets/fuentes/ClimateCrisis.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "DIN Condensed";
+  src: url("assets/fuentes/DINCondensed-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DIN Condensed";
+  src: url("assets/fuentes/DINCondensed-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --naranja: #ff6e23;
+  --beige: #e7ded3;
+  --violeta: #5b2757;
+  --violeta-claro: #70569a;
+  --negro: #231f20;
+  --titulo: "Climate Crisis", "DIN Condensed", sans-serif;
+  --texto: "DIN Condensed", "Arial Narrow", sans-serif;
+  --estrella: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  background: var(--beige);
+  color: var(--negro);
+  font: 300 1.25rem/1.35 var(--texto);
+  border-top: 10px solid var(--naranja);
+}
+
+.hoja {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+:focus-visible {
+  outline: 3px solid var(--negro);
+  outline-offset: 3px;
+}
+h2:focus {
+  outline: none;
+}
+
+/* ------------------------------------------------------------ encabezado */
+
+.logo {
+  display: block;
+  width: 9.5rem;
+  height: auto;
+  margin-bottom: 1.75rem;
+}
+.volanta {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.3rem 0.75rem 0.2rem;
+  border-radius: 999px;
+  background: var(--violeta);
+  color: var(--beige);
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+h1 {
+  margin: 0;
+  font: 400 clamp(1.5rem, 7.5vw, 2.4rem) / 1.05 var(--titulo);
+  font-variation-settings: "YEAR" 1979;
+  text-transform: uppercase;
+  color: var(--violeta);
+  overflow-wrap: break-word;
+}
+.contador {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.45rem;
+  margin: 1rem 0 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.contador strong {
+  font: 400 2rem/1 var(--titulo);
+  font-variation-settings: "YEAR" 1979;
+  color: var(--violeta);
+}
+.contador strong::before {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: 0.3rem;
+  background: var(--naranja);
+  clip-path: var(--estrella);
+}
+
+.texto {
+  margin: 1.5rem 0 2rem;
+}
+.texto p {
+  margin: 0 0 1rem;
+}
+.pendiente {
+  background: var(--naranja);
+  color: var(--negro);
+  font-weight: 700;
+  padding: 0 0.2em;
+}
+
+.aviso-prueba {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: var(--violeta);
+  color: var(--beige);
+  font-size: 1.05rem;
+}
+
+/* ------------------------------------------------------------ pasos */
+
+.paso {
+  padding: 1.4rem 1.2rem 1.6rem;
+  border: 3px solid var(--negro);
+  border-radius: 1.4rem;
+}
+.paso-numero {
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--violeta);
+}
+.paso h2 {
+  margin: 0 0 1.25rem;
+  font-weight: 700;
+  font-size: 1.75rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.ya-firmo {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.9rem;
+  background: var(--violeta);
+  color: var(--beige);
+  font-weight: 700;
+}
+
+form {
+  display: grid;
+  gap: 1.15rem;
+}
+
+/* ------------------------------------------------------------ campos */
+
+.campo {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.campo > label,
+.campo > legend {
+  padding: 0;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.campo > legend {
+  margin-bottom: 0.55rem;
+}
+.campo input[type="text"],
+.campo input[type="tel"],
+.campo input[type="email"] {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.55rem 1rem 0.4rem;
+  border: 3px solid var(--negro);
+  border-radius: 999px;
+  background: var(--beige);
+  color: var(--negro);
+  font: 300 1.3rem/1.2 var(--texto);
+}
+.ayuda {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+/* error: borde violeta + aro naranja + mensaje con "!" (no depende solo del color) */
+.campo input[aria-invalid="true"] {
+  border-color: var(--violeta);
+  box-shadow: 0 0 0 3px var(--naranja);
+}
+.error {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+  margin: 0.1rem 0 0;
+  color: var(--violeta);
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+.error::before {
+  content: "!";
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding-top: 0.12rem;
+  border-radius: 50%;
+  background: var(--violeta);
+  color: var(--beige);
+  font-size: 0.95rem;
+  line-height: 1;
+}
+.error-general {
+  padding: 0.7rem 0.9rem;
+  border: 3px solid var(--violeta);
+  border-radius: 1rem;
+}
+
+/* opciones: radios con forma de chip */
+.opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.opcion {
+  position: relative;
+  display: inline-flex;
+}
+.opcion input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.opcion span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem 0.38rem;
+  border: 2px solid var(--negro);
+  border-radius: 999px;
+  font: 700 1.1rem/1 var(--texto);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.opcion input:checked + span {
+  background: var(--negro);
+  color: var(--beige);
+}
+.opcion input:checked + span::before {
+  content: "";
+  width: 0.7em;
+  height: 0.7em;
+  background: var(--naranja);
+  clip-path: var(--estrella);
+}
+.opcion input:focus-visible + span {
+  outline: 3px solid var(--negro);
+  outline-offset: 3px;
+}
+fieldset[aria-invalid="true"] .opcion span {
+  border-width: 3px;
+  border-color: var(--violeta);
+}
+
+.aclaracion {
+  margin: 0.25rem 0 0;
+  padding: 0.8rem 1rem;
+  border-left: 6px solid var(--naranja);
+  background: rgb(91 39 87 / 0.08);
+  font-size: 1.15rem;
+}
+.mas-preguntas {
+  display: grid;
+  gap: 1.15rem;
+}
+
+/* "No quiero cursar nada, solo ayudar con mi firma": opción aparte, a todo el ancho */
+.opcion-ancha {
+  flex-basis: 100%;
+  margin-top: 0.25rem;
+}
+.opcion-ancha span {
+  width: 100%;
+  line-height: 1.15;
+  border-style: dashed;
+}
+.opcion-ancha input:checked + span {
+  border-style: solid;
+}
+
+.trampa {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------ botones */
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.6rem 1.3rem 0.45rem;
+  border: 3px solid var(--negro);
+  border-radius: 999px;
+  background: var(--naranja);
+  color: var(--negro);
+  font: 700 1.25rem/1 var(--texto);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  cursor: pointer;
+}
+.boton:hover {
+  background: var(--negro);
+  color: var(--beige);
+}
+.boton:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+.acciones {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+}
+/* ------------------------------------------------------------ final */
+
+.paso-final {
+  background: var(--naranja);
+  text-align: center;
+}
+.paso-final h2 {
+  font: 400 clamp(1.4rem, 6.5vw, 2rem) / 1.1 var(--titulo);
+  font-variation-settings: "YEAR" 1979;
+  color: var(--violeta);
+}
+.paso-final .boton {
+  background: var(--negro);
+  color: var(--beige);
+}
+.paso-final .boton:hover {
+  background: var(--violeta);
+  border-color: var(--violeta);
+}
+.compartir-aviso {
+  min-height: 1.4em;
+  margin: 0.75rem 0 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}
