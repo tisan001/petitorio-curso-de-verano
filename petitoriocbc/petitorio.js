@@ -113,8 +113,8 @@
   const MATERIAS = ["ICSE", "IPC", "Matemática", "Semiología", "Filosofía", "Proyectual 1", "Proyectual 2", "Dibujo", "Otra"];
   const SOLO_FIRMA = "Ninguna (solo firma)"; // así queda en la planilla
   $("materias").innerHTML =
-    MATERIAS.map((m) => `<label class="opcion"><input type="radio" name="materia" value="${m}" /><span>${m}</span></label>`).join("") +
-    `<label class="opcion opcion-ancha"><input type="radio" name="materia" value="${SOLO_FIRMA}" /><span>No quiero cursar nada, solo ayudar con mi firma</span></label>`;
+    MATERIAS.map((m) => `<label class="opcion"><input type="checkbox" name="materia" value="${m}" /><span>${m}</span></label>`).join("") +
+    `<label class="opcion opcion-ancha"><input type="checkbox" name="materia" value="${SOLO_FIRMA}" /><span>No quiero cursar nada, solo ayudar con mi firma</span></label>`;
 
   // ---------------------------------------------------------------- ayudas de formulario
 
@@ -220,27 +220,36 @@
     $("campo-otra").hidden = true;
     $("pregunta-termina").hidden = false;
   });
+  const casillasMateria = [...formEncuesta.querySelectorAll('input[name="materia"]')];
+  const materiasElegidas = () => casillasMateria.filter((c) => c.checked).map((c) => c.value);
+
   formEncuesta.addEventListener("change", (e) => {
     if (e.target.name !== "materia") return;
-    const otra = e.target.value === "Otra";
+    // "solo firma" no se combina con materias: elegir una desmarca la otra
+    if (e.target.checked) {
+      for (const c of casillasMateria) if ((c.value === SOLO_FIRMA) !== (e.target.value === SOLO_FIRMA)) c.checked = false;
+    }
+    const elegidas = materiasElegidas();
+    const otra = elegidas.includes("Otra");
     $("campo-otra").hidden = !otra;
-    $("pregunta-termina").hidden = e.target.value === SOLO_FIRMA;
-    if (otra) $("materia-otra").focus();
-    else marcar($("materia-otra"), "materia-otra-error", "");
+    $("pregunta-termina").hidden = elegidas.includes(SOLO_FIRMA);
+    if (otra && e.target.value === "Otra" && e.target.checked) $("materia-otra").focus();
+    if (!otra) marcar($("materia-otra"), "materia-otra-error", "");
   });
 
   formEncuesta.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const materia = formEncuesta.materia.value;
+    const materias = materiasElegidas();
+    const conOtra = materias.includes("Otra");
     const materiaOtra = limpiarTexto($("materia-otra").value);
     const terminaCBC = formEncuesta.terminaCBC.value;
     const telCrudo = formEncuesta.telefono.value.trim();
     const telefono = normalizarTelefono(telCrudo);
     const mail = formEncuesta.mail.value.trim();
-    const soloFirma = materia === SOLO_FIRMA; // no cursa: no se le pregunta si termina el CBC
+    const soloFirma = materias.includes(SOLO_FIRMA); // no cursa: no se le pregunta si termina el CBC
     const ok = [
-      marcar(fsMateria, "materia-error", materia ? "" : "Elegí una materia o la última opción."),
-      marcar($("materia-otra"), "materia-otra-error", materia === "Otra" && !materiaOtra ? "Contanos qué materia." : ""),
+      marcar(fsMateria, "materia-error", materias.length ? "" : "Elegí al menos una materia, o la última opción."),
+      marcar($("materia-otra"), "materia-otra-error", conOtra && !materiaOtra ? "Contanos qué materia." : ""),
       marcar(fsTermina, "termina-error", soloFirma || terminaCBC ? "" : "Elegí una opción."),
       marcar(
         formEncuesta.telefono,
@@ -259,8 +268,9 @@
     try {
       const r = await llamar("encuesta", {
         dni: dniFirmado,
-        materia,
-        materiaOtra: materia === "Otra" ? materiaOtra : "",
+        materias,
+        materia: materias[0], // para la versión anterior del script, que recibía una sola
+        materiaOtra: conOtra ? materiaOtra : "",
         terminaCBC: soloFirma ? "" : terminaCBC,
         telefono,
         mail,
