@@ -110,6 +110,17 @@
   }
   const mailValido = (s) => s.length <= 254 && /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)*\.[a-z]{2,}$/i.test(s);
 
+  const CARRERAS = [
+    "Arquitectura",
+    "Diseño Gráfico",
+    "Diseño Industrial",
+    "Diseño de Indumentaria",
+    "Diseño Textil",
+    "Diseño de Imagen y Sonido",
+    "Lic. en Planificación y Diseño del Paisaje",
+  ];
+  $("carreras").innerHTML = CARRERAS.map((c) => `<label class="opcion"><input type="radio" name="carrera" value="${c}" /><span>${c}</span></label>`).join("");
+
   const MATERIAS = ["ICSE", "IPC", "Matemática", "Semiología", "Filosofía", "Proyectual 1", "Proyectual 2", "Dibujo", "Otra"];
   const SOLO_FIRMA = "Ninguna (solo firma)"; // así queda en la planilla
   $("materias").innerHTML =
@@ -213,6 +224,7 @@
 
   const formEncuesta = $("form-encuesta");
   limpiarAlEditar(formEncuesta);
+  const fsCarrera = $("carreras").closest("fieldset");
   const fsMateria = $("materias").closest("fieldset");
   const fsTermina = formEncuesta.querySelector('[name="terminaCBC"]').closest("fieldset");
 
@@ -239,6 +251,7 @@
 
   formEncuesta.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const carrera = formEncuesta.carrera.value;
     const materias = materiasElegidas();
     const conOtra = materias.includes("Otra");
     const materiaOtra = limpiarTexto($("materia-otra").value);
@@ -248,6 +261,7 @@
     const mail = formEncuesta.mail.value.trim();
     const soloFirma = materias.includes(SOLO_FIRMA); // no cursa: no se le pregunta si termina el CBC
     const ok = [
+      marcar(fsCarrera, "carrera-error", carrera ? "" : "Elegí tu carrera."),
       marcar(fsMateria, "materia-error", materias.length ? "" : "Elegí al menos una materia, o la última opción."),
       marcar($("materia-otra"), "materia-otra-error", conOtra && !materiaOtra ? "Contanos qué materia." : ""),
       marcar(fsTermina, "termina-error", soloFirma || terminaCBC ? "" : "Elegí una opción."),
@@ -268,6 +282,7 @@
     try {
       const r = await llamar("encuesta", {
         dni: dniFirmado,
+        carrera,
         materias,
         materia: materias[0], // para la versión anterior del script, que recibía una sola
         materiaOtra: conOtra ? materiaOtra : "",
@@ -279,6 +294,7 @@
       });
       if (!r?.ok) {
         if (r?.error === "limite") return errorGeneral("encuesta-error", "Hay muchas respuestas entrando a la vez. Esperá un minuto y probá de nuevo.");
+        if (r?.campo === "carrera") return marcar(fsCarrera, "carrera-error", "Elegí tu carrera.") || fsCarrera.querySelector("input").focus();
         if (r?.campo === "telefono") return marcar(formEncuesta.telefono, "telefono-error", "Revisá el número de teléfono.") || formEncuesta.telefono.focus();
         if (r?.campo === "mail") return marcar(formEncuesta.mail, "mail-error", "Revisá el mail.") || formEncuesta.mail.focus();
         throw new Error("respuesta");

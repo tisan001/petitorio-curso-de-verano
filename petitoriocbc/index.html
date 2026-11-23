@@ -85,6 +85,11 @@
         <p class="ya-firmo" id="ya-firmo" hidden>Este DNI ya firmó el petitorio. ¡Gracias!</p>
         <h2 id="paso-encuesta-titulo" tabindex="-1">¡Gracias por firmar! Ayudanos con unas preguntas más</h2>
         <form id="form-encuesta" novalidate>
+          <fieldset class="campo" aria-describedby="carrera-error">
+            <legend>¿De qué carrera sos?</legend>
+            <div class="opciones" id="carreras"></div>
+            <p class="error" id="carrera-error" hidden></p>
+          </fieldset>
           <fieldset class="campo" aria-describedby="materias-ayuda materia-error">
             <legend>¿Qué materias necesitás cursar?</legend>
             <p class="ayuda" id="materias-ayuda">Podés elegir más de una.</p>
