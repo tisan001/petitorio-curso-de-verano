@@ -29,7 +29,7 @@
     if (PRUEBA) return simulado(accion, cuerpo);
     if (!BACKEND) throw new Error("sin-backend");
     const corte = new AbortController();
-    const reloj = setTimeout(() => corte.abort(), 20000);
+    const reloj = setTimeout(() => corte.abort(), 25000);
     try {
       const r = await fetch(cuerpo ? BACKEND : `${BACKEND}?accion=${accion}`, {
         method: cuerpo ? "POST" : "GET",
@@ -42,6 +42,20 @@
       return await r.json();
     } finally {
       clearTimeout(reloj);
+    }
+  }
+
+  // Si Google tarda o está "ocupado" (mucha gente enviando a la vez), reintenta solo 2 veces más.
+  // Es seguro: una firma con el mismo DNI no se duplica y la encuesta actualiza su fila.
+  async function enviar(accion, cuerpo) {
+    for (let intento = 1; ; intento++) {
+      try {
+        const r = await llamar(accion, cuerpo);
+        if (r?.error !== "ocupado" || intento === 3) return { ...r, reintentos: intento - 1 };
+      } catch (err) {
+        if (intento === 3) throw err;
+      }
+      await new Promise((listo) => setTimeout(listo, 1500 * intento));
     }
   }
 
@@ -202,15 +216,15 @@
     const boton = formFirma.querySelector(".boton");
     ocupado(boton, true, "Firmar");
     try {
-      const r = await llamar("firma", { nombre, apellido, dni, sitio: formFirma.sitio.value, ms: Date.now() - cargada });
+      const r = await enviar("firma", { nombre, apellido, dni, sitio: formFirma.sitio.value, ms: Date.now() - cargada });
       if (!r?.ok) {
         if (r?.error === "dni") return marcar(formFirma.dni, "dni-error", "El DNI tiene que tener entre 7 y 9 números.") || formFirma.dni.focus();
-        if (r?.error === "limite") return errorGeneral("firma-error", "Hay muchas firmas entrando a la vez. Esperá un minuto y probá de nuevo.");
+        if (r?.error === "limite" || r?.error === "ocupado") return errorGeneral("firma-error", "Hay muchas firmas entrando a la vez. Esperá un minuto y probá de nuevo.");
         throw new Error("respuesta");
       }
       dniFirmado = dni;
       if (Number.isFinite(r.firmas)) mostrarContador(r.firmas);
-      $("ya-firmo").hidden = r.estado !== "repetida";
+      $("ya-firmo").hidden = r.estado !== "repetida" || r.reintentos > 0;
       formFirma.reset();
       irA("paso-encuesta");
     } catch {
@@ -280,7 +294,7 @@
     const boton = formEncuesta.querySelector(".boton");
     ocupado(boton, true, "Enviar");
     try {
-      const r = await llamar("encuesta", {
+      const r = await enviar("encuesta", {
         dni: dniFirmado,
         carrera,
         materias,
@@ -293,7 +307,7 @@
         ms: Date.now() - cargada,
       });
       if (!r?.ok) {
-        if (r?.error === "limite") return errorGeneral("encuesta-error", "Hay muchas respuestas entrando a la vez. Esperá un minuto y probá de nuevo.");
+        if (r?.error === "limite" || r?.error === "ocupado") return errorGeneral("encuesta-error", "Hay muchas respuestas entrando a la vez. Esperá un minuto y probá de nuevo.");
         if (r?.campo === "carrera") return marcar(fsCarrera, "carrera-error", "Elegí tu carrera.") || fsCarrera.querySelector("input").focus();
         if (r?.campo === "telefono") return marcar(formEncuesta.telefono, "telefono-error", "Revisá el número de teléfono.") || formEncuesta.telefono.focus();
         if (r?.campo === "mail") return marcar(formEncuesta.mail, "mail-error", "Revisá el mail.") || formEncuesta.mail.focus();
