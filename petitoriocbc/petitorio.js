@@ -135,7 +135,7 @@
   ];
   $("carreras").innerHTML = CARRERAS.map((c) => `<label class="opcion"><input type="radio" name="carrera" value="${c}" /><span>${c}</span></label>`).join("");
 
-  const MATERIAS = ["ICSE", "IPC", "Matemática", "Semiología", "Filosofía", "Proyectual 1", "Proyectual 2", "Dibujo", "Otra"];
+  const MATERIAS = ["ICSE", "IPC", "Matemática", "Semiología", "Filosofía", "Proyectual 1", "Proyectual 2", "Dibujo", "Biología"];
   const SOLO_FIRMA = "Ninguna (solo firma)"; // así queda en la planilla
   $("materias").innerHTML =
     MATERIAS.map((m) => `<label class="opcion"><input type="checkbox" name="materia" value="${m}" /><span>${m}</span></label>`).join("") +
@@ -243,7 +243,6 @@
   const fsTermina = formEncuesta.querySelector('[name="terminaCBC"]').closest("fieldset");
 
   formEncuesta.addEventListener("reset", () => {
-    $("campo-otra").hidden = true;
     $("pregunta-termina").hidden = false;
   });
   const casillasMateria = [...formEncuesta.querySelectorAll('input[name="materia"]')];
@@ -256,19 +255,13 @@
       for (const c of casillasMateria) if ((c.value === SOLO_FIRMA) !== (e.target.value === SOLO_FIRMA)) c.checked = false;
     }
     const elegidas = materiasElegidas();
-    const otra = elegidas.includes("Otra");
-    $("campo-otra").hidden = !otra;
     $("pregunta-termina").hidden = elegidas.includes(SOLO_FIRMA);
-    if (otra && e.target.value === "Otra" && e.target.checked) $("materia-otra").focus();
-    if (!otra) marcar($("materia-otra"), "materia-otra-error", "");
   });
 
   formEncuesta.addEventListener("submit", async (e) => {
     e.preventDefault();
     const carrera = formEncuesta.carrera.value;
     const materias = materiasElegidas();
-    const conOtra = materias.includes("Otra");
-    const materiaOtra = limpiarTexto($("materia-otra").value);
     const terminaCBC = formEncuesta.terminaCBC.value;
     const telCrudo = formEncuesta.telefono.value.trim();
     const telefono = normalizarTelefono(telCrudo);
@@ -277,7 +270,6 @@
     const ok = [
       marcar(fsCarrera, "carrera-error", carrera ? "" : "Elegí tu carrera."),
       marcar(fsMateria, "materia-error", materias.length ? "" : "Elegí al menos una materia, o la última opción."),
-      marcar($("materia-otra"), "materia-otra-error", conOtra && !materiaOtra ? "Contanos qué materia." : ""),
       marcar(fsTermina, "termina-error", soloFirma || terminaCBC ? "" : "Elegí una opción."),
       marcar(
         formEncuesta.telefono,
@@ -299,7 +291,6 @@
         carrera,
         materias,
         materia: materias[0], // para la versión anterior del script, que recibía una sola
-        materiaOtra: conOtra ? materiaOtra : "",
         terminaCBC: soloFirma ? "" : terminaCBC,
         telefono,
         mail,
